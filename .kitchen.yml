@@ -1,0 +1,21 @@
+---
+driver_plugin: docker
+
+driver_config:
+  use_sudo: false
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: centos-6.4
+
+suites:
+  - name: default
+    run_list:
+      - recipe[docker::default]
+    attributes:
+
+busser:
+  sudo: true
+
