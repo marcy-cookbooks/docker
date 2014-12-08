@@ -40,7 +40,7 @@ file "/etc/profile.d/docker.sh" do
   group 'root'
   mode "0755"
   content <<-EOH
-export DOCKER_HOST=#{node['docker']['host']}
+export DOCKER_HOST=tcp://#{node['docker']['host']}
 EOH
 end
 
