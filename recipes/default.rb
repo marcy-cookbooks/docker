@@ -10,24 +10,37 @@
 include_recipe "yum"
 
 if node[:platform] == "amazon" then
-  releasever = "6"
+  package "docker" do
+    action :install
+  end
 else
-  releasever = "$releasever"
+  yum_repository "epel" do
+    description "epel repo"
+    baseurl "http://dl.fedoraproject.org/pub/epel/$releasever/$basearch/"
+    gpgkey  "http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-#{releasever}"
+    enabled true
+  end
+  package "docker-io" do
+    action :install
+  end
 end
 
-yum_repository "epel" do
-  description "epel repo"
-  baseurl "http://dl.fedoraproject.org/pub/epel/#{releasever}/$basearch/"
-  gpgkey  "http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-#{releasever}"
-  enabled true
+file "/etc/sysconfig/docker" do
+  mode 644
+  notifies :restart, 'service[docker]', :delayed
+  content <<-EOH
+DOCKER_OPTS="-H #{node['docker']['host']} --icc=false"
+EOH
 end
 
-package "docker-io" do
-  action :install
+file "/etc/profile.d/docker.sh" do
+  mode 755
+  content <<-EOH
+export DOCKER_HOST=#{node['docker']['host']}
+EOH
 end
 
 service "docker" do
   supports :status => true, :restart => true, :reload => false
   action [:enable, :start]
 end
-
