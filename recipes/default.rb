@@ -26,14 +26,18 @@ else
 end
 
 file "/etc/sysconfig/docker" do
+  owner 'root'
+  group 'root'
   mode 644
   notifies :restart, 'service[docker]', :delayed
   content <<-EOH
-DOCKER_OPTS="-H #{node['docker']['host']} --icc=false"
+other_args="-H #{node['docker']['host']} --icc=false"
 EOH
 end
 
 file "/etc/profile.d/docker.sh" do
+  owner 'root'
+  group 'root'
   mode 755
   content <<-EOH
 export DOCKER_HOST=#{node['docker']['host']}
