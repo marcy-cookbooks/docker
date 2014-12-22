@@ -17,7 +17,7 @@ else
   yum_repository "epel" do
     description "epel repo"
     baseurl "http://dl.fedoraproject.org/pub/epel/$releasever/$basearch/"
-    gpgkey  "http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-#{releasever}"
+    gpgkey  "http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6"
     enabled true
   end
   package "docker-io" do
